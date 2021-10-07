@@ -1,0 +1,102 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+
+
+<script src="https://canvasjs.com/assets/script/canvasjs.stock.min.js"></script>
+
+<div id="stockChartContainer"></div>
+
+<!--
+
+ style="height: 370px; width: 100%;"
+--> 
+
+<script type="text/javascript">
+
+    window.onload = function () {
+
+
+        var result = @Html.Raw(ViewBag.DataPoints);
+
+        var dataPoints =[];
+        for(var i = 0; i < result.length; i++){
+         dataPoints.push({label:result[i].x, y:result[i].y});
+        }
+        
+
+       
+        var stockChart = new CanvasJS.StockChart("stockChartContainer", {
+            zoomEnabled: true, //активирано е зумирање
+            animationEnabled: true, //активирани се анимации - исцртување на графиконот
+            theme: "light2", //тема на графиконот
+            backgroundColor: "darkslategrey",
+            exportEnabled: true, //опција за експортирање на графиконот како слика и можност за принтање
+
+            title: {
+                text: "Температура во текот на денот",
+                fontColor: "white"
+            },
+
+            axisY: {
+                labelFontColor: "white",
+                suffix: "°C", //суфикс на Y оска
+                title: "Температура", //име на Y Оска
+                label: "°C",
+                titleFontColor: "white",
+                tickColor: "white",
+            },
+            axisX: {
+                title: "Час",
+                valueFormatString: "DD-MM-YYYY HH:mm:ss",
+                titleFontColor: "white",
+                tickColor: "white",
+                gridColor: "white",
+                crosshair: {
+                    enabled: true, //вертикална линија - поврзана за курсорот
+                    lineDashType: "dash", //тип на линија
+                    thickness: 1, //дебелина на линија
+                    
+                    snapToDataPoint: true,
+                    color: "black"
+                },
+                suffix: "H", //суфикс на X оска
+             },
+            legend: {
+                horizontalAlign: "right",
+                verticalAlign: "center"
+            },
+            axisX: {
+                    //interval: 1,
+                    //intervalType: "hour",
+                
+
+                },
+            charts: [{
+                data: [{
+                    type: "line",
+                    xValueType: "dateTime",
+                    dataPoints: dataPoints
+                }],
+
+                navigator: {
+                    slider: {
+                        //minimum: "0",
+                        //maximum: "24"
+                    }
+                },
+                inputFields: {
+                    valueType: "dateTime",
+                    valueFormatString: "DD-MM-YYYY",
+                },
+            }]
+
+        });
+        stockChart.render();
+    }
+
+
+</script>
+
+
